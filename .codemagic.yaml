@@ -1,0 +1,29 @@
+workflows:
+  flutter-ios:
+    name: Flutter iOS
+    environment:
+      groups:
+        # Add your AppCenter app secret here
+        - appcenter_credentials
+      vars:
+        BUNDLE_ID: "com.example.notesapp"
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Get dependencies
+        script: |
+          flutter pub get
+      - name: Build iOS
+        script: |
+          flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/*.app
+    publishing:
+      appcenter:
+        # Add your AppCenter configuration here
+        api_token: $APP_CENTER_API_TOKEN
+        owner_name: $APP_CENTER_OWNER
+        app_name: $APP_CENTER_APP_NAME
+        distribution_groups: "Testers"
